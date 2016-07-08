@@ -18,7 +18,7 @@ setup(
     maintainer_email='wessmoke@gmail.com',
 
     url='https://github.com/herald-it/django-yamaps',
-    download_url='',
+    download_url='https://github.com/herald-it/django-yamaps/archive/%s.tar.gz' % (version),
 
     description='A django widget which allows you to select the address using the yandex map.',
     long_description=open(os.path.join(os.path.dirname(__file__), 'README.md')).read(),
