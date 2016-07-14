@@ -37,10 +37,12 @@ class AddressWidget(forms.TextInput):
     def render(self, name, value, attrs=None, **kwargs):
 
         addr = {}
-        if isinstance(value, Address):
-            addr = value.as_dict()
-        elif isinstance(value, int):
+        if isinstance(value, int):
             addr = Address.objects.get(pk=value).as_dict()
+        elif isinstance(value, dict):
+            addr = value
+        elif isinstance(value, Address):
+            addr = value.as_dict()
 
         # Raw address input will be readonly.
         if "readonly" not in attrs:
