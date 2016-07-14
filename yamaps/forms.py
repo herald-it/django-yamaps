@@ -7,15 +7,6 @@ from django.utils.safestring import mark_safe
 from .models import Address
 
 
-def get_address_js():
-    lang = "ru-RU"
-    if settings.LANGUAGE_CODE:
-        lang = settings.LANGUAGE_CODE
-    yamaps_js_url = \
-        "https://api-maps.yandex.ru/2.1/?lang={}".format(lang)
-    return yamaps_js_url, "yamaps/js/yamaps-widget.js"
-
-
 class AddressWidget(forms.TextInput):
 
     parts = ["latitude", "longitude", "country",
@@ -30,7 +21,12 @@ class AddressWidget(forms.TextInput):
         super(AddressWidget, self).__init__(*args, **kwargs)
 
     def _media(self):
-        return forms.Media(js=get_address_js())
+        lang = "ru-RU"
+        if settings.LANGUAGE_CODE:
+            lang = settings.LANGUAGE_CODE
+        yamaps_js_url = \
+            "https://api-maps.yandex.ru/2.1/?lang={}".format(lang)
+        return forms.Media(js=(yamaps_js_url, "yamaps/js/yamaps-widget.js"))
 
     media = property(_media)
 
