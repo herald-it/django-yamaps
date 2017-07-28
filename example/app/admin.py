@@ -1,9 +1,22 @@
 from django.contrib import admin
 from django import forms
 
-from yamaps.forms import AddressField
+from .forms import AddressField
+
+from .models import Country
+from .models import AdministrativeArea
+from .models import Locality
+from .models import Street
+from .models import Address
 
 from .models import ExampleModel
+
+
+admin.site.register(Country)
+admin.site.register(AdministrativeArea)
+admin.site.register(Locality)
+admin.site.register(Street)
+admin.site.register(Address)
 
 
 class ExampleModelForm(forms.ModelForm):
