@@ -1,10 +1,12 @@
-from decimal import Decimal
+import json
 
 from django import forms
 from django.conf import settings
 from django.utils.safestring import mark_safe
+from django.apps import apps
 
-from .models import Address
+
+from .settings import YAMAPS_ADDRESS_MODEL
 
 
 class AddressWidget(forms.TextInput):
@@ -31,73 +33,37 @@ class AddressWidget(forms.TextInput):
     media = property(_media)
 
     def render(self, name, value, attrs=None, **kwargs):
-
-        addr = {}
-        if isinstance(value, int):
-            addr = Address.objects.get(pk=value).as_dict()
-        elif isinstance(value, dict):
-            addr = value
-        elif isinstance(value, Address):
-            addr = value.as_dict()
-
         # Raw address input will be readonly.
         if "readonly" not in attrs:
             attrs["readonly"] = "readonly"
 
-        elems = [super(AddressWidget, self)
-                 .render(name, addr.get("raw", ""), attrs, **kwargs)]
+        raw_address = ""
 
-        # Hidden address parts.
-        elems.append('<div id="{}_components">'.format(name))
+        if isinstance(value, int):
+            addr_model = apps.get_model(YAMAPS_ADDRESS_MODEL)
+            value = addr_model.objects.get(pk=value)
+            try:
+                raw_address = value.to_raw()
+            except AttributeError:
+                raw_address = str(value)
 
-        for part in self.parts:
-            elems.append(
-                '<input type="hidden" name="{}_{}" value="{}" />'.format(
-                    name, part, addr.get(part, "")
-                ))
+        text_input = super().render(name, raw_address, attrs, **kwargs)
 
-        elems.append("</div>")
+        widget = """{old}
+<div id="{name}_components">
+<input type="hidden" name="{name}_json"/>
+<div id="{name}_map" style="width: 700px; height: 500px;"></div>
+</div>
+        """.format(old=text_input, name=name)
 
-        # Yandex map.
-        elems.append('<div id="{}_map" style="width: 700px; height: 500px;"></div>'
-                     .format(name))
-
-        return mark_safe('\n'.join(elems))
+        return mark_safe(widget)
 
     def value_from_datadict(self, data, files, name):
         raw = data.get(name, None)
         if not raw:
             return raw
 
-        addr = {p: data.get("{}_{}".format(name, p)) for p in self.parts}
+        addr_json = data.get("{}_json".format(name))
+        addr = json.loads(addr_json)
         addr["raw"] = raw
         return addr
-
-
-class AddressField(forms.Field):
-    widget = AddressWidget
-
-    def to_python(self, value):
-
-        if value is None or value == "":
-            return None
-
-        for field in ["latitude", "longitude"]:
-            if field in value:
-                if value[field]:
-                    try:
-                        value[field] = Decimal(value[field])
-                    except:
-                        raise forms.ValidationError(
-                            "Invalid value for %(field)s",
-                            code="invalid",
-                            params={"field": field}
-                        )
-                else:
-                    raise forms.ValidationError(
-                        "Field %(field)s is required",
-                        code="invalid",
-                        params={"field": field}
-                    )
-
-        return Address.objects.create_from_dict(value)
