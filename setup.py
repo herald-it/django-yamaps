@@ -1,4 +1,5 @@
-import os, sys
+import os
+import sys
 from setuptools import setup, find_packages
 
 version = '0.2.0'
@@ -18,14 +19,16 @@ setup(
     maintainer_email='wessmoke@gmail.com',
 
     url='https://github.com/herald-it/django-yamaps',
-    download_url='https://github.com/herald-it/django-yamaps/archive/%s.tar.gz' % (version),
+    download_url='https://github.com/herald-it/django-yamaps/archive/%s.tar.gz' % version,
 
     description='A django widget which allows you to select the address using the yandex map.',
     long_description=open(os.path.join(os.path.dirname(__file__), 'README.md')).read(),
-    classifiers = [
+    classifiers=[
         'Development Status :: 3 - Alpha',
         'Framework :: Django',
         'Framework :: Django :: 1.9',
+        'Framework :: Django :: 1.10',
+        'Framework :: Django :: 1.11',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: Russian',
@@ -43,5 +46,5 @@ setup(
     package_data={'': ['*.js', '*.html', '*.*']},
     install_requires=['setuptools'],
     zip_safe=False,
-    keywords = ['django', 'address', 'yandex', 'maps', 'admin']
+    keywords=['django', 'address', 'yandex', 'maps', 'admin']
 )
