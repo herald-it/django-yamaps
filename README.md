@@ -57,3 +57,9 @@ YAMAPS_ADDRESS_MODEL = "app.Address"
 
 {% yamaps_init %}
 ```
+
+Вы можете указать стили карты вторым аргументом:
+
+```
+{% yamaps address "width: 640px; height: 480px;" %}
+```
