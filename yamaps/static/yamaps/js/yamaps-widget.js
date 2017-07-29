@@ -7,9 +7,7 @@
         addrDetails.longitude = coords[1];
 
         var selector = 'input[name="' + input_name + '_json"]';
-        console.log(selector);
         var jsonInput = document.querySelector(selector);
-        console.log(jsonInput);
 
         jsonInput.setAttribute("value", JSON.stringify(addrDetails));
 
