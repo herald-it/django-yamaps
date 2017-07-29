@@ -1,0 +1,15 @@
+{% load yamaps %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Addresses</title>
+</head>
+<body>
+    {% for address in addresses %}
+        <p>{{ address }}</p>
+        {% yamaps address "width: 640px; height: 480px;" %}
+    {% endfor %}
+
+    {% yamaps_init %}
+</body>
+</html>

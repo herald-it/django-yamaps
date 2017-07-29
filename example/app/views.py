@@ -1,3 +1,8 @@
 from django.shortcuts import render
 
-# Create your views here.
+from .models import Address
+
+
+def index(request):
+    addresses = Address.objects.all()
+    return render(request, "index.html", {"addresses": addresses})
