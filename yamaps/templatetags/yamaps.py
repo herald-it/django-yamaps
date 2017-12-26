@@ -21,6 +21,8 @@ def yamaps_init():
     <script type="text/javascript">
     window.onload = function() {
         ymaps.ready(function () {
+            window.django_yamaps = [];
+
             var maps = document.querySelectorAll(".django-yamaps");
             maps.forEach(function (elem) {
                 var map = new ymaps.Map(elem, {
@@ -34,6 +36,8 @@ def yamaps_init():
                     map.geoObjects.add(firstGeoObject);
                     map.setCenter(coords);
                 });
+                
+                window.django_yamaps.push(map);
             });
     })};
     </script>''')
